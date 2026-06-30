@@ -48,7 +48,7 @@ const skills = [
   { name: "Express.js", value: 85 },
   { name: "MongoDB", value: 80 },
   { name: "REST API Architecture", value: 88 },
-  { name: "Authentication & Authorization (JWT, Role-based)", value: 82 },
+  { name: "Authentication & Authorization", value: 82 },
   { name: "Tailwind CSS", value: 90 },
   { name: "CSS / Responsive Design", value: 85 },
   { name: "Git & GitHub", value: 85 },

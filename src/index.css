@@ -136,6 +136,8 @@
   }
 }
 
+
+
 .animate-placeholder-wave {
   display: inline-block;
   animation: placeholder-wave 1.4s ease-in-out infinite;

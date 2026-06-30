@@ -271,13 +271,12 @@ export default function App() {
             &copy; {new Date().getFullYear()} @ vickify.in
           </div>
           <div>
-            built by <a href="/" className="underline hover:text-primary">vicky</a>
+            built by <a href="https://github.com/vickify" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">vicky</a>
           </div>
         </footer>
 
 {/* Floating Vickify Native AI Chatbox */}
-<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-2xl px-6 font-mono text-xs">
-  <div className="bg-zinc-900 rounded-sm p-3.5 shadow-none w-full flex flex-col focus-within:shadow-[0_0_0_1px] focus-within:shadow-teal-600/10 transition-all duration-300">
+<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-0.5rem)] max-w-2xl px-6 font-mono text-xs">  <div className="bg-zinc-900 rounded-sm p-3.5 shadow-none w-full flex flex-col focus-within:shadow-[0_0_0_1px] focus-within:shadow-teal-600/10 transition-all duration-300">
     <div
       className={`grid transition-all duration-300 ease-out ${
         isChatOpen ? "grid-rows-[1fr] opacity-100 mb-2.5" : "grid-rows-[0fr] opacity-0 mb-0"

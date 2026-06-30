@@ -110,9 +110,7 @@ export default function Home() {
           <div className="space-y-2">
             <h1 className="font-bold italic font-mono text-lg sm:text-xl md:text-[22px] tracking-tight text-foreground lowercase group-hover/header:text-primary transition-all duration-300">
               vicky ~{" "}
-              <span className="font-sans text-[12px] sm:text-xs text-primary group-hover/header:text-primary/70 transition-colors duration-300">
-                சென்னை
-              </span>
+              
             </h1>
             <div className="flex flex-wrap items-center gap-1.5 select-none font-mono text-[10px] sm:text-[11px] leading-none">
               <span className="border border-border/50 rounded-xs px-2 py-0.5 text-muted-foreground bg-secondary/30 hover:text-primary hover:border-primary/30 transition-all duration-200">
@@ -131,12 +129,11 @@ export default function Home() {
                 mobile
               </span>
             </div>
-            <p className="italic text-foreground/80 leading-normal font-sans text-[15px] sm:text-[16px] max-w-lg">
-              {meta.description.toLowerCase()}
-            </p>
+           
           </div>
+          
           <div className="text-right font-mono text-xs sm:text-sm select-none shrink-0 space-y-0.5">
-            <p className="text-foreground/50 font-sans group-hover/header:text-primary transition-colors duration-300">
+            <p className="text-foreground/50 italic font-sans group-hover/header:text-primary transition-colors duration-300">
               சென்னை
             </p>
             <p className="text-foreground/70 group-hover/header:text-foreground transition-colors duration-300">
@@ -144,6 +141,11 @@ export default function Home() {
             </p>
           </div>
         </div>
+        <div className="w-8/10 pt-5">
+             <p className="italic text-foreground/80 leading-normal font-sans text-[15px] sm:text-[16px] max-w-lg">
+              {meta.description.toLowerCase()}
+            </p>
+           </div>
       </section>
 
       {/* Current Section */}

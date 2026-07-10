@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from "react"
-import { Routes, Route, NavLink } from "react-router-dom"
-import { Sun, Moon, Send } from "lucide-react"
+import { Routes, Route, NavLink, useLocation } from "react-router-dom"
+import { Sun, Moon, Send, Menu, X } from "lucide-react"
 import { useTheme } from "src/components/ThemeProvider"
+import { MinecraftIcon } from "@xefreh/minecraft-assets-react"
+import { diamond } from "@xefreh/minecraft-assets-react/items"
 import Home from "src/pages/Home"
 import Projects from "src/pages/Projects"
 import Blog from "src/pages/Blog"
 import BlogPost from "src/pages/BlogPost"
+import Play from "src/pages/Play"
 
 import {
   meta,
@@ -14,7 +17,8 @@ import {
   worktimeline,
   skills as skillsData,
   beyondProfession,
-  contactConfig
+  contactConfig,
+  socialprofils
 } from "src/lib/data"
 
 interface ChatMessage {
@@ -72,7 +76,27 @@ function parseMarkdown(text: string): React.ReactNode {
 
 export default function App() {
   const { theme, setTheme } = useTheme()
-  
+
+  // Scroll + menu states
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+
+  useEffect(() => {
+    const onScroll = () => {
+      const isScrolled = window.scrollY > 20
+      setScrolled(isScrolled)
+      if (!isScrolled && window.innerWidth >= 640) {
+        setMenuOpen(false) // auto-close only on desktop when back at top
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+
   // AI Chatbox states
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [chatInput, setChatInput] = useState("")
@@ -202,59 +226,126 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-200 relative pb-32">
-      <div className="mx-auto max-w-2xl px-6 py-16 md:py-24 text-[15px] md:text-[16.5px] leading-relaxed tracking-tight lowercase font-sans">
-        
-        {/* Minimal Navigation & Theme Toggle */}
-        <nav className="flex items-center justify-between border-b border-border/10 pb-6 mb-12 select-none">
-          <div className="flex items-center space-x-4 font-mono text-xs md:text-[13px]">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `transition-all hover:text-primary ${
-                  isActive ? "text-primary font-bold" : "text-muted-foreground"
-                }`
-              }
+
+      {/* ── Nav wrapper: always fixed, no relative/fixed switching layout jumps ── */}
+      <div
+        className={`z-45 fixed top-0 left-0 right-0 w-full transition-all duration-300 ease-in-out border-b ${
+          scrolled
+            ? "bg-background/95 backdrop-blur-sm border-border/15"
+            : "bg-background border-border/10"
+        }`}
+      >
+        {/* ── Primary bar ── */}
+        <div
+          className={`mx-auto max-w-2xl px-6 flex items-center justify-between select-none font-mono text-xs md:text-[13px] transition-all duration-300 relative ${
+            scrolled ? "py-4.5" : "py-5"
+          }`}
+        >
+
+          {/* LEFT: vicky (scrolled) ↔ nav links (at top) */}
+          <div className="relative flex items-center min-w-[160px]">
+
+            {/* Nav links — fade + slide up out on scroll */}
+            <div
+              className={`flex items-center gap-4 transition-all duration-300 ease-in-out ${
+                scrolled
+                  ? "opacity-0 -translate-y-3 pointer-events-none absolute"
+                  : "opacity-100 translate-y-0"
+              }`}
             >
-              home
-            </NavLink>
-            <span className="text-border/30">/</span>
-            <NavLink
-              to="/projects"
-              className={({ isActive }) =>
-                `transition-all hover:text-primary ${
-                  isActive ? "text-primary font-bold" : "text-muted-foreground"
-                }`
-              }
+              <NavLink to="/" className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? "text-primary font-bold" : "text-muted-foreground"}`}>home</NavLink>
+              <span className="text-border/30">/</span>
+              <NavLink to="/projects" className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? "text-primary font-bold" : "text-muted-foreground"}`}>projects</NavLink>
+              <span className="text-border/30">/</span>
+              <NavLink to="/blog" className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? "text-primary font-bold" : "text-muted-foreground"}`}>blog</NavLink>
+            </div>
+
+            {/* vicky ~ — same style as hero h1, fades + slides up into navbar */}
+            <span
+              className={`font-bold italic font-mono text-lg tracking-tight text-foreground transition-all duration-300 ease-in-out whitespace-nowrap ${
+                scrolled
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-3 absolute pointer-events-none"
+              }`}
             >
-              projects
-            </NavLink>
-            <span className="text-border/30">/</span>
-            <NavLink
-              to="/blog"
-              className={({ isActive }) =>
-                `transition-all hover:text-primary ${
-                  isActive ? "text-primary font-bold" : "text-muted-foreground"
-                }`
-              }
-            >
-              blog
-            </NavLink>
+              vicky <span className="inline-block animate-tilde-wave origin-center">~</span>
+            </span>
           </div>
 
-          {/* Small Theme Toggle */}
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-1.5 rounded-sm border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all cursor-pointer"
-            aria-label="toggle theme"
-          >
-            {theme === "dark" ? (
-              <Sun className="h-3.5 w-3.5" />
-            ) : (
-              <Moon className="h-3.5 w-3.5" />
-            )}
-          </button>
-        </nav>
+          {/* RIGHT: theme toggle (always) + menu toggle (scrolled) */}
+          <div className="flex items-center gap-2">
+            {/* Theme toggle — always visible */}
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="toggle theme"
+              className="p-1.5 rounded-sm border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+            >
+              {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
+            </button>
 
+            {/* Collapse menu toggle — visible only when scrolled */}
+            <button
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label="toggle menu"
+              className={`p-1.5 rounded-sm border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer ${
+                scrolled ? "opacity-100 scale-100" : "opacity-0 pointer-events-none scale-75 w-0 h-0 border-0 p-0 overflow-hidden"
+              }`}
+            >
+              {menuOpen ? <X className="h-3.5 w-3.5" /> : <Menu className="h-3.5 w-3.5" />}
+            </button>
+          </div>
+
+          {/* ── Floating Popover Menu — only when scrolled and open ── */}
+          {scrolled && menuOpen && (
+            <div className="absolute top-[calc(100%+8px)] right-6 w-40 bg-background/98 border border-border/15 rounded-sm shadow-xl z-50 p-2.5 select-none font-mono text-sm lowercase transition-all animate-in fade-in slide-in-from-top-1.5 duration-200">
+              <div className="flex flex-col gap-1">
+                <NavLink
+                  to="/"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${
+                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  home
+                </NavLink>
+
+                <NavLink
+                  to="/projects"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${
+                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  projects
+                </NavLink>
+
+                <NavLink
+                  to="/blog"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${
+                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  blog
+                </NavLink>
+
+                {/* <NavLink
+                  to="/play"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40 italic ${
+                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  play clicker
+                </NavLink> */}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Offset so content doesn't hide under fixed nav */}
+      <div className="mx-auto max-w-2xl px-6 text-[15px] md:text-[16.5px] leading-relaxed tracking-tight lowercase font-sans pt-24 sm:pt-28">
         {/* View Routes wrapper */}
         <main className="w-full">
           <Routes>
@@ -262,18 +353,27 @@ export default function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/play" element={<Play />} />
           </Routes>
         </main>
 
-        {/* Footer */}
-        <footer className="mt-20 pt-8 border-t border-border/10 font-mono text-xs text-slate-500 lowercase flex flex-col sm:flex-row sm:justify-between items-center gap-2 select-none">
-          <div>
-            &copy; {new Date().getFullYear()} @ vickify.in
+        <footer className="mt-20 pt-8 border-t border-border/10 font-mono text-xs text-slate-500 lowercase select-none flex flex-col items-center gap-2.5">
+          <div className="flex items-center justify-center gap-2">
+            <span>"talk is cheap. show me the code."</span>
+            
           </div>
-          <div>
-            built by <a href="https://github.com/vickify" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">vicky</a>
+          <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+            <a href={socialprofils.github} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">github</a>
+            <span className="text-border/20">/</span>
+            <a href={socialprofils.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">linkedin</a>
+            <span className="text-border/20">/</span>
+            <a href={socialprofils.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">twitter</a>
+            <span className="text-border/20">/</span>
+            <a href={socialprofils.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">instagram</a>
           </div>
         </footer>
+
+
 
 {/* Floating Vickify Native AI Chatbox */}
 <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-0.5rem)] max-w-2xl px-6 font-mono text-xs">  <div className="bg-zinc-900 rounded-sm p-3.5 shadow-none w-full flex flex-col focus-within:shadow-[0_0_0_1px] focus-within:shadow-teal-600/10 transition-all duration-300">

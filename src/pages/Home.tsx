@@ -6,11 +6,11 @@ import {
   Send,
   Loader2,
   Terminal,
-  Code2,
   BookOpen,
   Film,
   Compass,
 } from "lucide-react";
+import StackIcon from "src/components/StackIcon";
 import {
   FaGithub as Github,
   FaLinkedin as Linkedin,
@@ -34,6 +34,24 @@ import {
   contactConfig,
   socialprofils,
 } from "src/lib/data";
+
+const skillIcons: Record<string, string> = {
+  "javascript": "js",
+  "typescript": "typescript",
+  "react / next.js": "reactjs",
+  "node.js": "nodejs",
+  "express.js": "expressjs",
+  "mongodb": "mongodb",
+  "rest api architecture": "postman",
+  "authentication & authorization": "auth0",
+  "tailwind css": "tailwindcss",
+  "css / responsive design": "css3",
+  "git & github": "git",
+  "firebase": "firebase",
+  "docker": "docker",
+  "deployment (vercel / render / vps)": "vercel",
+  "system design (small–mid scale apps)": "aws"
+};
 
 export default function Home() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -103,7 +121,7 @@ export default function Home() {
     "font-bold italic font-mono text-base sm:text-lg text-foreground lowercase border-b border-border/10 pb-1.5";
 
   return (
-    <div className="flex flex-col gap-12 md:gap-14">
+    <div className="flex flex-col gap-12 md:gap-14 mt-4">
       {/* Intro Header Section (Grouped for Chennai hover highlight) */}
       <section className="group/header select-none">
         <div className="flex justify-between items-start gap-4">
@@ -187,17 +205,29 @@ export default function Home() {
       {/* Skills Section */}
       <section className="space-y-3">
         <h2 className={headingClass}>skills</h2>
-        <div className="flex flex-wrap gap-1.5">
-          {skillsData.map((skill) => (
-            <Badge
-              key={skill.name}
-              variant="outline"
-              className="bg-secondary/50 dark:bg-card/30 border-border text-foreground hover:border-primary/40 hover:text-primary transition-all duration-200 font-mono text-xs sm:text-[13px] py-0.5 px-2 rounded-sm lowercase shadow-none"
-            >
-              <Code2 className="h-3 w-3 mr-1 text-primary shrink-0" />
-              {skill.name.toLowerCase()}
-            </Badge>
-          ))}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {skillsData.map((skill, index) => {
+            const icon = skillIcons[skill.name.toLowerCase()];
+            const floatClass = `animate-pet-float-${(index % 4) + 1}`;
+            const hoverClass = index % 2 === 0 ? "hover-pet-jump" : "hover-pet-wiggle";
+            return (
+              <Badge
+                key={skill.name}
+                variant="outline"
+                className="bg-secondary/40 dark:bg-card/20 border-border/80 text-foreground hover:border-primary/50 hover:text-primary transition-all duration-300 font-mono text-xs sm:text-[13px] py-1.5 px-3 rounded-sm lowercase shadow-none flex items-center gap-2 cursor-default group"
+              >
+                {icon ? (
+                  <StackIcon
+                    name={icon}
+                    className={`w-3.5 h-3.5 shrink-0 transition-transform duration-300 ${floatClass} ${hoverClass} group-hover:scale-110`}
+                  />
+                ) : (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/60 shrink-0" />
+                )}
+                {skill.name.toLowerCase()}
+              </Badge>
+            );
+          })}
         </div>
       </section>
 
@@ -329,6 +359,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+
 
       {/* Contact Section */}
       <section className="space-y-4">

@@ -235,8 +235,8 @@ export default function App() {
       >
         {/* ── Primary bar ── */}
         <div
-          className={`mx-auto max-w-2xl px-6 flex items-center justify-between select-none font-mono text-xs md:text-[13px] transition-all duration-300 relative ${
-            scrolled ? "py-4.5" : "py-5"
+          className={`mx-auto max-w-2xl px-6 py-5 flex items-center justify-between select-none font-mono text-xs md:text-[13px] transition-all duration-300 relative ${
+            scrolled ? "py-5" : "py-5"
           }`}
         >
 
@@ -271,27 +271,33 @@ export default function App() {
           </div>
 
           {/* RIGHT: theme toggle (always) + menu toggle (scrolled) */}
-          <div className="flex items-center gap-2">
-            {/* Theme toggle — always visible */}
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label="toggle theme"
-              className="p-1.5 rounded-sm border border-border bg-card/40 text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
-            >
-              {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-            </button>
+         <div className="flex items-center gap-2 transition-all">
 
-            {/* Collapse menu toggle — visible only when scrolled */}
-            <button
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-label="toggle menu"
-              className={`p-1.5 rounded-sm border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer ${
-                scrolled ? "opacity-100 scale-100" : "opacity-0 pointer-events-none scale-75 w-0 h-0 border-0 p-0 overflow-hidden"
-              }`}
-            >
-              {menuOpen ? <X className="h-3.5 w-3.5" /> : <Menu className="h-3.5 w-3.5" />}
-            </button>
-          </div>
+
+  <button
+    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+    aria-label="toggle theme"
+    className="p-1.5 rounded-sm bg-card/40 text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+  >
+    {theme === "dark" ? (
+      <Sun className="h-3.5 w-3.5" />
+    ) : (
+      <Moon className="h-3.5 w-3.5" />
+    )}
+  </button>  {scrolled && (
+    <button
+      onClick={() => setMenuOpen((o) => !o)}
+      aria-label="toggle menu"
+      className="p-1.5 rounded-sm  text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+    >
+      {menuOpen ? (
+        <X className="h-3.5 w-3.5" />
+      ) : (
+        <Menu className="h-3.5 w-3.5" />
+      )}
+    </button>
+  )}
+</div>
 
           {/* ── Floating Popover Menu — only when scrolled and open ── */}
           {scrolled && menuOpen && (
@@ -343,7 +349,7 @@ export default function App() {
       </div>
 
       {/* Offset so content doesn't hide under fixed nav */}
-      <div className="mx-auto max-w-2xl px-6 text-[15px] md:text-[16.5px] leading-relaxed tracking-tight lowercase font-sans pt-24 sm:pt-28">
+      <div className="mx-auto max-w-2xl py-5 px-6 text-[15px] md:text-[16.5px] leading-relaxed tracking-tight lowercase font-sans pt-24 sm:pt-28">
         {/* View Routes wrapper */}
         <main className="w-full">
           <Routes>

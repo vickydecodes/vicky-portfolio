@@ -24,7 +24,6 @@ export default function MascotAssistant() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   // Dropping physics variables
-  const [isDropping, setIsDropping] = useState(true)
   const isDroppingRef = useRef(true)
   const dropVelocity = useRef(0)
 
@@ -67,7 +66,6 @@ export default function MascotAssistant() {
   // Mascot summon/un-dismiss drop trigger hook
   useEffect(() => {
     if (!isMascotDismissed) {
-      setIsDropping(true)
       isDroppingRef.current = true
       dropVelocity.current = 0
       const startX = window.innerWidth > 0 ? (window.innerWidth - 120 - Math.random() * 80) : 250
@@ -96,8 +94,6 @@ export default function MascotAssistant() {
           if (nextY >= targetY) {
             nextY = targetY
             isDroppingRef.current = false
-            setIsDropping(false)
-            
             // Impact squish effect (superhero landing duration)
             setIsBouncing(true)
             setTimeout(() => {

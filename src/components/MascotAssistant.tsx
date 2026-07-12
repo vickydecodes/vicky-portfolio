@@ -15,13 +15,18 @@ const speechLines = [
 
 export default function MascotAssistant() {
   const { isChatOpen, setChatOpen, isMascotDismissed, setMascotDismissed } = useChatStore()
-  const [position, setPosition] = useState({ x: 50, y: 150 })
+  const [position, setPosition] = useState({ x: 250, y: -200 })
   const [isBouncing, setIsBouncing] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [isHoveringDustbin, setIsHoveringDustbin] = useState(false)
   const [speechIndex, setSpeechIndex] = useState(0)
   const [showSpeech, setShowSpeech] = useState(true)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+
+  // Dropping physics variables
+  const [isDropping, setIsDropping] = useState(true)
+  const isDroppingRef = useRef(true)
+  const dropVelocity = useRef(0)
 
   const dragOffset = useRef({ x: 0, y: 0 })
   const velocity = useRef({ vx: 0.8, vy: 0.6 })
@@ -59,6 +64,17 @@ export default function MascotAssistant() {
     return () => clearInterval(interval)
   }, [isMascotDismissed])
 
+  // Mascot summon/un-dismiss drop trigger hook
+  useEffect(() => {
+    if (!isMascotDismissed) {
+      setIsDropping(true)
+      isDroppingRef.current = true
+      dropVelocity.current = 0
+      const startX = window.innerWidth > 0 ? (window.innerWidth - 120 - Math.random() * 80) : 250
+      setPosition({ x: startX, y: -200 })
+    }
+  }, [isMascotDismissed])
+
   // Physics & wandering loop
   useEffect(() => {
     if (isMascotDismissed || isChatOpen || isDragging || prefersReducedMotion) {
@@ -69,6 +85,37 @@ export default function MascotAssistant() {
     }
 
     const updatePhysics = () => {
+      // If dropping (superhero entrance), calculate acceleration and floor collision
+      if (isDroppingRef.current) {
+        setPosition((prev) => {
+          const targetY = window.innerHeight - hitboxHeight - 20
+          
+          dropVelocity.current += 1.25 // Gravity acceleration
+          let nextY = prev.y + dropVelocity.current
+          
+          if (nextY >= targetY) {
+            nextY = targetY
+            isDroppingRef.current = false
+            setIsDropping(false)
+            
+            // Impact squish effect (superhero landing duration)
+            setIsBouncing(true)
+            setTimeout(() => {
+              setIsBouncing(false)
+            }, 450)
+            
+            // Bounce upward slightly and kick off wandering direction
+            dropVelocity.current = 0
+            velocity.current.vx = (Math.random() > 0.5 ? 1 : -1) * (0.4 + Math.random() * 0.4)
+            velocity.current.vy = -0.6
+          }
+          return { x: prev.x, y: nextY }
+        })
+        
+        animationFrameId.current = requestAnimationFrame(updatePhysics)
+        return
+      }
+
       setPosition((prev) => {
         let nextX = prev.x + (isWalking.current ? velocity.current.vx : 0)
         let nextY = prev.y + (isWalking.current ? velocity.current.vy : 0)
@@ -294,8 +341,7 @@ export default function MascotAssistant() {
             isBouncing ? "scale-y-[0.80] scale-x-[1.20]" : ""
           } ${isDragging ? "scale-105 opacity-90 cursor-grabbing" : ""}`}
         >
-          {/* Hover highlight ring */}
-          <div className="absolute inset-2 border border-primary/0 group-hover:border-primary/20 rounded-md transition-colors duration-200" />
+
           
           <img 
             src="/assets/minecraft_me.png" 

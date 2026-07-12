@@ -5,6 +5,7 @@ export interface ChatMessage {
   sender: "user" | "ai"
   text: string
   isError?: boolean
+  isTypingComplete?: boolean
 }
 
 interface ChatState {

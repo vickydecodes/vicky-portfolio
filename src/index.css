@@ -265,3 +265,18 @@
   display: inline-block;
   animation: tilde-wave 2.2s ease-in-out infinite;
 }
+
+/* Custom Cursor Hiding on Fine Pointer Devices */
+@media (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active a,
+  body.custom-cursor-active button,
+  body.custom-cursor-active input,
+  body.custom-cursor-active textarea,
+  body.custom-cursor-active [role="button"],
+  body.custom-cursor-active .cursor-pointer,
+  body.custom-cursor-active .cursor-grab,
+  body.custom-cursor-active .cursor-grabbing {
+    cursor: none !important;
+  }
+}

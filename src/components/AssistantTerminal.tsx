@@ -77,12 +77,23 @@ function parseMarkdown(text: string, isUser: boolean): React.ReactNode {
     )
   })
 }
-function TypewriterText({ text, isUser, scrollRef }: { text: string; isUser: boolean; scrollRef: React.RefObject<HTMLDivElement | null> }) {
+function TypewriterText({ 
+  text, 
+  isUser, 
+  scrollRef, 
+  onComplete 
+}: { 
+  text: string; 
+  isUser: boolean; 
+  scrollRef: React.RefObject<HTMLDivElement | null>;
+  onComplete?: () => void;
+}) {
   const [displayedText, setDisplayedText] = useState("")
 
   useEffect(() => {
     if (isUser) {
       setDisplayedText(text)
+      onComplete?.()
       return
     }
 
@@ -98,6 +109,7 @@ function TypewriterText({ text, isUser, scrollRef }: { text: string; isUser: boo
 
       if (index >= text.length) {
         clearInterval(interval)
+        onComplete?.()
       }
     }, 8) // Fast, smooth character typewriter ticks (8ms)
 
@@ -371,13 +383,24 @@ export default function AssistantTerminal({ variant, onClose }: AssistantTermina
                           ? "bg-destructive/10 text-destructive border border-destructive/25 font-mono text-[11px] rounded-lg"
                           : isUser
                             ? "bg-primary text-primary-foreground border border-primary/20 rounded-tr-none"
-                            : "bg-secondary dark:bg-zinc-900 text-foreground border border-border/60 dark:border-border/45 rounded-tl-none"
+                            : "bg-zinc-900 dark:bg-zinc-900 text-zinc-100 dark:text-zinc-100 border border-zinc-800/80 dark:border-border/45 rounded-tl-none"
                       }`}
                     >
                       {msg.isError 
                         ? msg.text 
-                        : idx === chatMessages.length - 1 
-                          ? <TypewriterText text={msg.text} isUser={isUser} scrollRef={messagesEndRef} />
+                        : (idx === chatMessages.length - 1 && !msg.isTypingComplete)
+                          ? (
+                            <TypewriterText 
+                              text={msg.text} 
+                              isUser={isUser} 
+                              scrollRef={messagesEndRef} 
+                              onComplete={() => {
+                                const updated = [...chatMessages]
+                                updated[idx] = { ...updated[idx], isTypingComplete: true }
+                                setChatMessages(updated)
+                              }}
+                            />
+                          )
                           : parseMarkdown(msg.text, isUser)
                       }
                     </div>

@@ -5,6 +5,7 @@ import { useTheme } from "src/components/ThemeProvider"
 import { useChatStore } from "src/store/useChatStore"
 import AssistantTerminal from "src/components/AssistantTerminal"
 import MascotAssistant from "src/components/MascotAssistant"
+import CustomCursor from "src/components/CustomCursor"
 import Home from "src/pages/Home"
 import Projects from "src/pages/Projects"
 import Blog from "src/pages/Blog"
@@ -59,6 +60,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-200 relative pb-12">
+      <CustomCursor />
 
       {/* ── Nav wrapper: always fixed, no relative/fixed switching layout jumps ── */}
       <div

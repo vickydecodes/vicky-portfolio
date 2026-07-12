@@ -14,8 +14,11 @@ const blogMetaMap: Record<string, {
 }
 
 function parseText(text: string): React.ReactNode {
+  // Normalize CRLF to LF just in case
+  const safeText = text.replace(/\r\n/g, "\n");
+  
   // Split by code blocks first
-  const parts = text.split(/(`[^`]+`)/g)
+  const parts = safeText.split(/(`[^`]+`)/g)
   return parts.map((part, pIdx) => {
     if (part.startsWith("`") && part.endsWith("`")) {
       return (
@@ -25,39 +28,127 @@ function parseText(text: string): React.ReactNode {
       )
     }
     
-    // Split by bold blocks
-    const subParts = part.split(/(\*\*[^*]+\*\*)/g)
-    return subParts.map((subPart, sIdx) => {
-      if (subPart.startsWith("**") && subPart.endsWith("**")) {
-        return (
-          <strong key={`${pIdx}-${sIdx}`} className="font-bold text-foreground">
-            {subPart.slice(2, -2)}
-          </strong>
-        )
-      }
-      
-      // Split by italic blocks (single asterisk)
-      const italicParts = subPart.split(/(\*[^*]+\*)/g)
-      return italicParts.map((italicPart, iIdx) => {
-        if (italicPart.startsWith("*") && italicPart.endsWith("*")) {
+    // Split by links: [text](url)
+    const linkParts = part.split(/(\[[^\]]+\]\([^)]+\))/g)
+    return linkParts.map((linkPart, lIdx) => {
+      if (linkPart.startsWith("[") && linkPart.includes("](") && linkPart.endsWith(")")) {
+        const match = linkPart.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+        if (match) {
+          const linkText = match[1]
+          const linkUrl = match[2]
           return (
-            <span key={`${pIdx}-${sIdx}-${iIdx}`} className="italic text-foreground/90">
-              {italicPart.slice(1, -1)}
-            </span>
+            <a 
+              key={`${pIdx}-${lIdx}`} 
+              href={linkUrl} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-primary hover:underline font-semibold"
+            >
+              {linkText}
+            </a>
           )
         }
-        return italicPart
+      }
+      
+      // Split by bold blocks
+      const subParts = linkPart.split(/(\*\*[^*]+\*\*)/g)
+      return subParts.map((subPart, sIdx) => {
+        if (subPart.startsWith("**") && subPart.endsWith("**")) {
+          return (
+            <strong key={`${pIdx}-${lIdx}-${sIdx}`} className="font-bold text-foreground">
+              {subPart.slice(2, -2)}
+            </strong>
+          )
+        }
+        
+        // Split by italic blocks (single asterisk)
+        const italicParts = subPart.split(/(\*[^*]+\*)/g)
+        return italicParts.map((italicPart, iIdx) => {
+          if (italicPart.startsWith("*") && italicPart.endsWith("*")) {
+            return (
+              <span key={`${pIdx}-${lIdx}-${sIdx}-${iIdx}`} className="italic text-foreground/90">
+                {italicPart.slice(1, -1)}
+               </span>
+            )
+          }
+          return italicPart
+        })
       })
     })
   })
 }
 
 function renderBlogPostContent(content: string) {
-  const rawBlocks = content.trim().split("\n\n")
+  // Normalize Windows line endings
+  const normalizedContent = content.replace(/\r\n/g, "\n");
+  const rawBlocks = normalizedContent.trim().split("\n\n")
 
   return rawBlocks.map((block, bIdx) => {
     const trimmedBlock = block.trim()
     if (!trimmedBlock) return null
+
+    // Check if block is a header: #, ##, ###, ####
+    if (trimmedBlock.startsWith("#")) {
+      const match = trimmedBlock.match(/^(#{1,6})\s+(.+)$/)
+      if (match) {
+        const level = match[1].length
+        const headerText = match[2]
+        
+        if (level === 1) {
+          return (
+            <h1 key={bIdx} className="font-extrabold italic font-mono text-xl sm:text-2xl text-foreground lowercase mt-6 mb-3">
+              {parseText(headerText)}
+            </h1>
+          )
+        } else if (level === 2) {
+          return (
+            <h2 key={bIdx} className="font-bold italic font-mono text-base sm:text-lg text-foreground lowercase border-b border-border/10 pb-1 mt-6 mb-3">
+              {parseText(headerText)}
+            </h2>
+          )
+        } else if (level === 3) {
+          return (
+            <h3 key={bIdx} className="font-bold font-mono text-[14px] sm:text-[15.5px] text-foreground lowercase mt-5 mb-2">
+              {parseText(headerText)}
+            </h3>
+          )
+        } else {
+          return (
+            <h4 key={bIdx} className="font-semibold font-mono text-[13px] text-foreground/90 lowercase mt-4 mb-2">
+              {parseText(headerText)}
+            </h4>
+          )
+        }
+      }
+    }
+
+    // Check if block is a code block: ```[lang] ... ```
+    if (trimmedBlock.startsWith("```") && trimmedBlock.endsWith("```")) {
+      const lines = trimmedBlock.split("\n")
+      const lang = lines[0].slice(3).trim()
+      const codeLines = lines.slice(1, -1).join("\n")
+      
+      return (
+        <div key={bIdx} className="relative group my-5">
+          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+            <button
+              onClick={() => navigator.clipboard.writeText(codeLines)}
+              className="px-2 py-1 text-[9px] font-mono lowercase border border-border/20 bg-background/90 rounded-sm hover:border-primary/40 hover:text-primary transition-all cursor-pointer active:scale-95 select-none"
+            >
+              [copy]
+            </button>
+          </div>
+          {lang && (
+            <span className="absolute top-2 left-3 font-mono text-[9px] text-muted-foreground/60 select-none uppercase">
+              {lang}
+            </span>
+          )}
+          <pre className="p-4 pt-8 rounded-sm bg-secondary/15 dark:bg-zinc-900/30 border border-border/10 overflow-x-auto font-mono text-xs sm:text-[13px] leading-relaxed text-foreground/90">
+            <code>{codeLines}</code>
+          </pre>
+        </div>
+      )
+    }
 
     // Check if block is an image: ![alt](url)
     if (trimmedBlock.startsWith("![") && trimmedBlock.endsWith(")")) {
@@ -129,8 +220,6 @@ function renderBlogPostContent(content: string) {
   })
 }
 
-
-
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>()
   const post = blogs.find((b) => b.slug === slug)
@@ -156,6 +245,23 @@ export default function BlogPost() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+
+
+  // Save read state to local storage when viewing a blog post
+  useEffect(() => {
+    if (post) {
+      try {
+        const readList = JSON.parse(localStorage.getItem("vicky-read-posts") || "[]")
+        if (!readList.includes(post.slug)) {
+          readList.push(post.slug)
+          localStorage.setItem("vicky-read-posts", JSON.stringify(readList))
+        }
+      } catch (e) {
+        console.warn(e)
+      }
+    }
+  }, [post])
+
   useEffect(() => {
     if (postIndex === -1) {
       setIsLoading(false)
@@ -165,17 +271,32 @@ export default function BlogPost() {
     setIsLoading(true)
     setHasError(false)
 
-    // Try fetching HTML first, fallback to MD if not found
-    fetch(`/assets/blogs/${fileNumber}.html`)
+    // Fetch MD first, fallback to HTML. Guard against SPA fallback redirect returning index.html
+    fetch(`/blogs/${fileNumber}.md`)
       .then((res) => {
         if (res.ok) {
-          setContentFormat("html")
-          return res.text()
+          return res.text().then((text) => {
+            // If the server redirected/returned the SPA index.html wrapper, treat it as a 404
+            if (text.trim().startsWith("<!DOCTYPE html")) {
+              throw new Error("SPA index fallback")
+            }
+            setContentFormat("md")
+            return text
+          })
         }
-        return fetch(`/assets/blogs/${fileNumber}.md`).then((resMd) => {
-          if (!resMd.ok) throw new Error("Blog file not found")
-          setContentFormat("md")
-          return resMd.text()
+        throw new Error("MD not found")
+      })
+      .catch(() => {
+        // Fallback to HTML
+        return fetch(`/blogs/${fileNumber}.html`).then((resHtml) => {
+          if (!resHtml.ok) throw new Error("Blog file not found")
+          return resHtml.text().then((text) => {
+            if (text.trim().startsWith("<!DOCTYPE html")) {
+              throw new Error("SPA index fallback")
+            }
+            setContentFormat("html")
+            return text
+          })
         })
       })
       .then((text) => {
@@ -281,6 +402,8 @@ export default function BlogPost() {
         </Link>
         <span className="text-[10px] text-zinc-500">// end of log.</span>
       </footer>
+
+
 
     </article>
   )

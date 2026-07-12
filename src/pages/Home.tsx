@@ -16,9 +16,9 @@ import StackIcon from "src/components/StackIcon";
 import {
   FaGithub as Github,
   FaLinkedin as Linkedin,
-  FaTwitter as Twitter,
+  FaXTwitter as Twitter,
   FaInstagram as Instagram,
-} from "react-icons/fa";
+} from "react-icons/fa6";
 import emailjs from "@emailjs/browser";
 import { Badge } from "src/components/ui/badge";
 import { Input } from "src/components/ui/input";
@@ -479,7 +479,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
               className="group transition-all duration-200"
-              aria-label="twitter profile"
+              aria-label="x profile"
             >
               <Twitter className="h-5 w-5 text-muted-foreground group-hover:text-primary group-hover:-translate-y-0.5 transition-all duration-200" />
             </a>

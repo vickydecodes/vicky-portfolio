@@ -208,7 +208,7 @@ export default function App() {
             <span className="text-border/20">/</span>
             <a href={socialprofils.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">linkedin</a>
             <span className="text-border/20">/</span>
-            <a href={socialprofils.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">twitter</a>
+            <a href={socialprofils.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">x</a>
             <span className="text-border/20">/</span>
             <a href={socialprofils.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">instagram</a>
           </div>

@@ -340,6 +340,16 @@ export default function AssistantTerminal({ variant, onClose }: AssistantTermina
               vicky <span className="inline-block animate-tilde-wave origin-center text-primary">~</span>
             </h1>
           </div>
+          {chatMessages.length > 0 && (
+            <button
+              onClick={() => setChatMessages([])}
+              className="text-muted-foreground hover:text-destructive active:scale-95 transition-all cursor-pointer p-2 rounded-full hover:bg-secondary/45 flex items-center justify-center -mr-2"
+              title="clear chat history"
+              aria-label="clear chat history"
+            >
+              <Trash2 className="h-4.5 w-4.5" />
+            </button>
+          )}
         </div>
       </div>
 

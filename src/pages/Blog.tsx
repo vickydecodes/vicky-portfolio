@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom"
 import { blogs } from "src/lib/data"
+import { useState, useEffect } from "react"
 
 export default function Blog() {
+  const [readSlugs, setReadSlugs] = useState<string[]>([])
+
+  useEffect(() => {
+    try {
+      const readList = JSON.parse(localStorage.getItem("vicky-read-posts") || "[]")
+      setReadSlugs(readList)
+    } catch (e) {
+      console.warn(e)
+    }
+  }, [])
+
   return (
     <div className="space-y-8 font-sans lowercase">
       
@@ -33,12 +45,19 @@ export default function Blog() {
               {/* Right Column: Title and Date aligned, with description and view button below */}
               <div className="flex-1 space-y-1.5 min-w-0">
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 sm:gap-4">
-                  <Link
-                    to={`/blog/${post.slug}`}
-                    className="font-mono text-base sm:text-lg md:text-[20px] text-foreground hover:text-primary transition-colors leading-snug font-bold"
-                  >
-                    {post.title.toLowerCase()}
-                  </Link>
+                  <div className="flex flex-wrap items-baseline gap-2 min-w-0">
+                    <Link
+                      to={`/blog/${post.slug}`}
+                      className="font-mono text-base sm:text-lg md:text-[20px] text-foreground hover:text-primary transition-colors leading-snug font-bold"
+                    >
+                      {post.title.toLowerCase()}
+                    </Link>
+                    {readSlugs.includes(post.slug) && (
+                      <span className="font-mono text-[9px] text-muted-foreground/35 select-none lowercase shrink-0">
+                        [read]
+                      </span>
+                    )}
+                  </div>
                   
                   <span className="font-mono text-[10px] sm:text-xs text-muted-foreground/60 tabular-nums select-none shrink-0">
                     {post.date.toLowerCase()}

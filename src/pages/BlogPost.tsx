@@ -136,7 +136,8 @@ export default function BlogPost() {
   const post = blogs.find((b) => b.slug === slug)
   const [scrollProgress, setScrollProgress] = useState(0)
 
-  const [mdContent, setMdContent] = useState<string>("")
+  const [blogContent, setBlogContent] = useState<string>("")
+  const [contentFormat, setContentFormat] = useState<"html" | "md">("md")
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
 
@@ -164,15 +165,23 @@ export default function BlogPost() {
     setIsLoading(true)
     setHasError(false)
 
-    fetch(`/assets/blogs/${fileNumber}.md`)
+    // Try fetching HTML first, fallback to MD if not found
+    fetch(`/assets/blogs/${fileNumber}.html`)
       .then((res) => {
-        if (!res.ok) throw new Error("markdown file not found")
-        return res.text()
+        if (res.ok) {
+          setContentFormat("html")
+          return res.text()
+        }
+        return fetch(`/assets/blogs/${fileNumber}.md`).then((resMd) => {
+          if (!resMd.ok) throw new Error("Blog file not found")
+          setContentFormat("md")
+          return resMd.text()
+        })
       })
       .then((text) => {
         // Strip main heading to prevent double headers
         const cleanText = text.replace(/^#\s+.+$/m, "").trim()
-        setMdContent(cleanText)
+        setBlogContent(cleanText)
         setIsLoading(false)
       })
       .catch((err) => {
@@ -251,8 +260,13 @@ export default function BlogPost() {
             <div className="space-y-4 text-xs text-destructive py-10">
               <p>error: failed to load article content</p>
             </div>
+          ) : contentFormat === "html" ? (
+            <div 
+              dangerouslySetInnerHTML={{ __html: blogContent }} 
+              className="text-[14px] sm:text-[15.5px] leading-relaxed text-foreground/85 font-sans space-y-4"
+            />
           ) : (
-            renderBlogPostContent(mdContent)
+            renderBlogPostContent(blogContent)
           )}
         </div>
       </div>

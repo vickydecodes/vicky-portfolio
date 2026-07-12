@@ -9,8 +9,10 @@ import {
   BookOpen,
   Film,
   Compass,
+  Download,
 } from "lucide-react";
 import StackIcon from "src/components/StackIcon";
+
 import {
   FaGithub as Github,
   FaLinkedin as Linkedin,
@@ -146,6 +148,15 @@ export default function Home() {
               <span className="border border-border/50 rounded-xs px-2 py-0.5 text-muted-foreground bg-secondary/30 hover:text-primary hover:border-primary/30 transition-all duration-200">
                 mobile
               </span>
+              <a
+                href="/vignesh_k_resume.pdf"
+                download="vignesh_k_resume.pdf"
+                className="border border-primary/45 rounded-xs px-2 py-0.5 text-primary bg-primary/5 hover:bg-primary hover:text-primary-foreground transition-all duration-250 font-bold ml-1.5 inline-flex items-center gap-1 cursor-pointer"
+                title="download resume"
+              >
+                <Download className="h-3 w-3 shrink-0" />
+                <span>resume.pdf</span>
+              </a>
             </div>
            
           </div>
@@ -359,7 +370,6 @@ export default function Home() {
           ))}
         </div>
       </section>
-
 
 
       {/* Contact Section */}

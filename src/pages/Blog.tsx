@@ -6,11 +6,11 @@ export default function Blog() {
     <div className="space-y-8 font-sans lowercase">
       
       {/* Page Header */}
-      <div className="space-y-2 select-none pb-4 border-b border-border/10">
-        <h2 className="font-extrabold italic font-mono text-2xl sm:text-3xl md:text-[38px] text-foreground tracking-tight leading-none">
+      <div className="space-y-1 select-none border-b border-border/10 pb-2">
+        <h2 className="font-bold italic font-mono text-base sm:text-lg text-foreground lowercase">
           writings
         </h2>
-        <p className="text-xs sm:text-[13px] text-muted-foreground leading-relaxed">
+        <p className="text-xs sm:text-sm text-muted-foreground lowercase">
           occasional thoughts on software engineering, distributed systems, compiler engines, and network logic.
         </p>
       </div>

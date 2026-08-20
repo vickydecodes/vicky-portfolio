@@ -182,21 +182,9 @@ export default function Home() {
         <h2 className={headingClass}>current</h2>
         <div className="space-y-3 text-foreground/85 leading-relaxed font-sans lowercase">
           <p>
-            full stack developer at{" "}
-            <span className="inline-flex align-middle gap-0.5 bg-secondary text-secondary-foreground dark:bg-zinc-800 dark:text-zinc-100 rounded-sm px-1.5 py-0.5 hover:cursor-pointer hover:border-primary/50 transition duration-200 leading-4 font-mono text-xs border border-border">
-              <Terminal className="h-3 w-3 shrink-0 self-center text-white animate-pulse" />
-              <a
-                href="https://github.com/vickydecodes"
-                target="_blank"
-                rel="noopener"
-                className="hover:text-primary transition-colors"
-              >
-                cookie
-              </a>
-            </span>
-            , building end-to-end applications from database architecture to
-            interface code. working across client-side logic, rest api engines,
-            and infrastructure deployments.
+            freelance full stack developer, building end-to-end applications from
+            database architecture to interface code. working across client-side
+            logic, rest api engines, and infrastructure deployments.
           </p>
           <p>
             pursued a bachelor of computer applications at gurunanak college.

@@ -23,11 +23,11 @@ const introdata = {
 const dataabout = {
   title: "A bit about me",
   aboutme:
-    "I'm Vignesh — Full Stack Developer at Cookie. I work across the full stack: system architecture, APIs, UI, deployment — the whole picture. No templates, no shortcuts — just well-built products that actually do what they promise.",
+    "I'm Vignesh — Full Stack Developer. I work across the full stack: system architecture, APIs, UI, deployment — the whole picture. No templates, no shortcuts — just well-built products that actually do what they promise.",
 };
 
 const worktimeline = [
-  { jobtitle: "Full Stack Developer", where: "Cookie Inc.", date: "2025 – Present" },
+  { jobtitle: "Full Stack Developer", where: "Freelance", date: "2025 – Present" },
   {
     jobtitle: "Web Developer",
     where: "Innotech Titans",
@@ -131,7 +131,7 @@ More soon.
     fullContent: `
 "Fail fast" gets overused. But it's overused because it's right.
 
-Early on at Cookie, things broke. Features missed. Decisions didn't hold up.
+Early on in my projects, things broke. Features missed. Decisions didn't hold up.
 
 The shift that helped most was treating failure as feedback — not as a verdict on effort or ability.
 
@@ -154,7 +154,7 @@ Vision and execution pull against each other if you let them.
 Vision without execution stays a concept — polished, inspiring, going nowhere.
 Execution without vision burns real time on the wrong things.
 
-The direction at Cookie is clear: build technology that genuinely moves the needle for the businesses using it.
+My direction is clear: build technology that genuinely moves the needle for the businesses using it.
 
 But that only matters if we execute — small, deliberate, consistent steps. Every day.
 

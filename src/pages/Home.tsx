@@ -5,7 +5,6 @@ import {
   ArrowUpRight,
   Send,
   Loader2,
-  Terminal,
   BookOpen,
   Film,
   Compass,

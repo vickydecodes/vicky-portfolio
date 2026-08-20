@@ -263,11 +263,11 @@ export default function AssistantTerminal({ variant, onClose }: AssistantTermina
         let aiResponse = ""
 
         if (lowerText.includes("project") || lowerText.includes("build") || lowerText.includes("work") || lowerText.includes("portfolio")) {
-          aiResponse = "vicky built several products, including cookie inc., vickify, and developer tools. you can find them in the builds tab!"
+          aiResponse = "vicky is a full stack developer at cookie. you can find his projects in the builds tab!"
         } else if (lowerText.includes("skill") || lowerText.includes("tech") || lowerText.includes("stack") || lowerText.includes("language") || lowerText.includes("code")) {
           aiResponse = "vicky works across the full stack. his skills include react, typescript, node.js, rust, python, postgresql, docker, and cloud systems."
         } else if (lowerText.includes("experience") || lowerText.includes("previous") || lowerText.includes("job") || lowerText.includes("career")) {
-          aiResponse = "vicky is the founder of cookie inc., building end-to-end applications. he has experience working across client-side logic, rest api engines, and infrastructure deployments."
+          aiResponse = "vicky is a full stack developer at cookie, building end-to-end applications. he has experience working across client-side logic, rest api engines, and infrastructure deployments."
         } else if (lowerText.includes("contact") || lowerText.includes("email") || lowerText.includes("phone") || lowerText.includes("reach") || lowerText.includes("ping")) {
           aiResponse = "you can reach vicky at hello@vickify.in or via the contact form on the home page!"
         } else if (lowerText.includes("education") || lowerText.includes("college") || lowerText.includes("gurunanak") || lowerText.includes("bca")) {
@@ -275,7 +275,7 @@ export default function AssistantTerminal({ variant, onClose }: AssistantTermina
         } else if (lowerText.includes("anime") || lowerText.includes("one piece") || lowerText.includes("luffy")) {
           aiResponse = "vicky is probably thinking about one piece right now. he loves anime, movies, and reading!"
         } else {
-          aiResponse = "i can tell you about vicky's skills, his projects (like cookie inc.), his background, or how to contact him. what would you like to know?"
+          aiResponse = "i can tell you about vicky's skills, his work at cookie, his background, or how to contact him. what would you like to know?"
         }
 
         setChatMessages((prev) => [...prev, { sender: "ai", text: aiResponse }])

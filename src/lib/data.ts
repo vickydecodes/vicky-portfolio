@@ -23,7 +23,7 @@ const introdata = {
 const dataabout = {
   title: "A bit about me",
   aboutme:
-    "I'm Vignesh — Full Stack Developer, Founder of Cookie Inc., and someone who takes building seriously but doesn't take himself too seriously. I work across the full stack: system architecture, APIs, UI, deployment — the whole picture. Started Cookie because I kept seeing half-baked software win on marketing alone. That bothered me enough to do something about it. No templates, no shortcuts — just well-built products that actually do what they promise.",
+    "I'm Vignesh — Full Stack Developer at Cookie. I work across the full stack: system architecture, APIs, UI, deployment — the whole picture. No templates, no shortcuts — just well-built products that actually do what they promise.",
 };
 
 const worktimeline = [
@@ -123,26 +123,6 @@ More soon.
     `,
   },
   {
-    title: "How I Started My Startup Journey",
-    date: "May 20, 2025",
-    slug: "how-i-started-my-startup-journey",
-    description:
-      "No investors. No co-founder. Just a real problem, a laptop, and the stubbornness to build something worth building. Here's what actually happened.",
-    fullContent: `
-Every startup starts somewhere.
-
-Mine started with a problem I kept running into and the stubbornness to fix it properly — not patch it.
-
-No investors. No big team. Late nights, a lot of iteration, and a belief that good software should earn attention through quality, not noise.
-
-Pitching to friends. Cutting features. Starting over. Cookie wasn't just a project — it was where I learned what it actually means to build something from scratch.
-
-If you're at the beginning: the process teaches you more than any outcome will.
-
-Keep shipping.
-    `,
-  },
-  {
     title: "Fail Fast, Learn Faster",
     date: "May 15, 2025",
     slug: "fail-fast-learn-faster",
@@ -207,7 +187,7 @@ Effort still matters. But directed effort is what compounds over time.
     description:
       "Turns out 'no' is a complete sentence. It took me longer than I'd like to admit to figure that out — but once I did, everything got sharper.",
     fullContent: `
-No is one of the most underrated words in building a company.
+No is one of the most underrated words in building products.
 
 Every yes to the wrong project, the misaligned client, the low-leverage task is a quiet no to the thing that actually matters.
 

@@ -182,7 +182,7 @@ export default function Home() {
         <h2 className={headingClass}>current</h2>
         <div className="space-y-3 text-foreground/85 leading-relaxed font-sans lowercase">
           <p>
-            founder at{" "}
+            full stack developer at{" "}
             <span className="inline-flex align-middle gap-0.5 bg-secondary text-secondary-foreground dark:bg-zinc-800 dark:text-zinc-100 rounded-sm px-1.5 py-0.5 hover:cursor-pointer hover:border-primary/50 transition duration-200 leading-4 font-mono text-xs border border-border">
               <Terminal className="h-3 w-3 shrink-0 self-center text-white animate-pulse" />
               <a
@@ -191,7 +191,7 @@ export default function Home() {
                 rel="noopener"
                 className="hover:text-primary transition-colors"
               >
-                cookie inc.
+                cookie
               </a>
             </span>
             , building end-to-end applications from database architecture to

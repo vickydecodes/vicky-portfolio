@@ -7,15 +7,23 @@ const speechLines = [
   "hii 👋",
   "ask me anything",
   "click me!",
+  "double tap to replay ✨",
   "psst, I'm real",
   "don't bin me! 🥺",
   "run /help inside me",
   "i wander around"
 ]
 
-export default function MascotAssistant() {
+interface MascotAssistantProps {
+  initialPosition?: { x: number; y: number } | null
+  onReplayIntro?: () => void
+}
+
+export default function MascotAssistant({ initialPosition, onReplayIntro }: MascotAssistantProps) {
   const { isChatOpen, setChatOpen, isMascotDismissed, setMascotDismissed } = useChatStore()
-  const [position, setPosition] = useState({ x: 250, y: -200 })
+  const [position, setPosition] = useState(
+    () => initialPosition ?? { x: 250, y: -200 }
+  )
   const [isBouncing, setIsBouncing] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [isHoveringDustbin, setIsHoveringDustbin] = useState(false)
@@ -24,8 +32,9 @@ export default function MascotAssistant() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
 
   // Dropping physics variables
-  const isDroppingRef = useRef(true)
+  const isDroppingRef = useRef(!initialPosition)
   const dropVelocity = useRef(0)
+  const prevDismissedRef = useRef(isMascotDismissed)
 
   const dragOffset = useRef({ x: 0, y: 0 })
   const velocity = useRef({ vx: 0.8, vy: 0.6 })
@@ -36,6 +45,18 @@ export default function MascotAssistant() {
   const isMouseDown = useRef(false)
   const dragStartPos = useRef({ x: 0, y: 0 })
   const hasDragged = useRef(false)
+  const lastTapRef = useRef(0)
+  const singleTapTimerRef = useRef<number | null>(null)
+  const onReplayRef = useRef(onReplayIntro)
+  onReplayRef.current = onReplayIntro
+
+  useEffect(() => {
+    return () => {
+      if (singleTapTimerRef.current) {
+        clearTimeout(singleTapTimerRef.current)
+      }
+    }
+  }, [])
 
   const mascotWidth = 48
   const hitboxWidth = 64
@@ -65,13 +86,22 @@ export default function MascotAssistant() {
 
   // Mascot summon/un-dismiss drop trigger hook
   useEffect(() => {
+    const wasDismissed = prevDismissedRef.current
+    prevDismissedRef.current = isMascotDismissed
+
     if (!isMascotDismissed) {
+      // If placed directly by the Figma intro on initial mount, stay at that exact spot
+      if (!wasDismissed && initialPosition) {
+        isDroppingRef.current = false
+        velocity.current = { vx: -0.65, vy: -0.35 }
+        return
+      }
       isDroppingRef.current = true
       dropVelocity.current = 0
       const startX = window.innerWidth > 0 ? (window.innerWidth - 120 - Math.random() * 80) : 250
       setPosition({ x: startX, y: -200 })
     }
-  }, [isMascotDismissed])
+  }, [isMascotDismissed, initialPosition])
 
   // Physics & wandering loop
   useEffect(() => {
@@ -261,8 +291,26 @@ export default function MascotAssistant() {
         setIsHoveringDustbin(false)
       }
     } else {
-      // Simple click! Open chat
-      setChatOpen(true)
+      // Single tap opens chat; double tap replays the Figma intro
+      const now = Date.now()
+      if (onReplayRef.current && now - lastTapRef.current < 320) {
+        if (singleTapTimerRef.current) {
+          clearTimeout(singleTapTimerRef.current)
+          singleTapTimerRef.current = null
+        }
+        lastTapRef.current = 0
+        onReplayRef.current()
+      } else {
+        lastTapRef.current = now
+        if (onReplayRef.current) {
+          singleTapTimerRef.current = window.setTimeout(() => {
+            singleTapTimerRef.current = null
+            setChatOpen(true)
+          }, 260)
+        } else {
+          setChatOpen(true)
+        }
+      }
     }
   }
 

@@ -124,7 +124,7 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-12 md:gap-14 mt-4">
       {/* Intro Header Section (Grouped for Chennai hover highlight) */}
-      <section className="group/header select-none">
+      <section data-figma-node="hero" className="group/header select-none">
         <div className="flex justify-between items-start gap-4">
           <div className="space-y-2">
             <h1 className="font-bold italic font-mono text-lg sm:text-xl md:text-[22px] tracking-tight text-foreground lowercase group-hover/header:text-primary transition-all duration-300">
@@ -177,7 +177,7 @@ export default function Home() {
       </section>
 
       {/* Current Section */}
-      <section className="space-y-3">
+      <section data-figma-node="current" className="space-y-3">
         <h2 className={headingClass}>current</h2>
         <div className="space-y-3 text-foreground/85 leading-relaxed font-sans lowercase">
           <p>
@@ -193,7 +193,7 @@ export default function Home() {
       </section>
 
       {/* About Section */}
-      <section className="space-y-3">
+      <section data-figma-node="about" className="space-y-3">
         <h2 className={headingClass}>{dataabout.title.toLowerCase()}</h2>
         <p className="text-foreground/85 leading-relaxed font-sans lowercase">
           {dataabout.aboutme.toLowerCase()}
@@ -201,7 +201,7 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section className="space-y-3">
+      <section data-figma-node="skills" className="space-y-3">
         <h2 className={headingClass}>skills</h2>
         <div className="flex flex-wrap gap-2 pt-1">
           {skillsData.map((skill, index) => {
@@ -230,7 +230,7 @@ export default function Home() {
       </section>
 
       {/* Experience Section */}
-      <section className="space-y-3">
+      <section data-figma-node="previous" className="space-y-3">
         <h2 className={headingClass}>previous</h2>
         <div className="space-y-2.5 font-mono text-xs sm:text-[13px] lowercase">
           {worktimeline.map((exp) => (

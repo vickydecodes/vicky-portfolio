@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
-import { Routes, Route, NavLink, useLocation } from "react-router-dom"
+import { Routes, Route, NavLink, useLocation, useNavigate } from "react-router-dom"
 import { Sun, Moon, Menu, X } from "lucide-react"
 import { useTheme } from "src/components/ThemeProvider"
 import { useChatStore } from "src/store/useChatStore"
 import AssistantTerminal from "src/components/AssistantTerminal"
 import MascotAssistant from "src/components/MascotAssistant"
 import CustomCursor from "src/components/CustomCursor"
+import FigmaIntro from "src/components/FigmaIntro"
 import Home from "src/pages/Home"
 import Projects from "src/pages/Projects"
 import Blog from "src/pages/Blog"
@@ -21,6 +22,36 @@ export default function App() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+
+  // Figma designer-POV intro (plays once per session on the home page, replayable via double-tap on mascot or footer)
+  const [showIntro, setShowIntro] = useState(() => {
+    if (typeof window === "undefined") return false
+    if (window.location.pathname !== "/") return false
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return false
+    return !sessionStorage.getItem("vicky_figma_intro_seen")
+  })
+  const [mascotDropPos, setMascotDropPos] = useState<{ x: number; y: number } | null>(null)
+
+  const handleIntroDone = (dropPos?: { x: number; y: number }) => {
+    sessionStorage.setItem("vicky_figma_intro_seen", "1")
+    setMascotDropPos(dropPos ?? null)
+    setShowIntro(false)
+  }
+
+  const replayIntro = () => {
+    setMascotDropPos(null)
+    if (location.pathname !== "/") {
+      navigate("/")
+      window.setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })
+        setShowIntro(true)
+      }, 60)
+      return
+    }
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior })
+    setShowIntro(true)
+  }
 
   useEffect(() => {
     const onScroll = () => {
@@ -61,20 +92,20 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-200 relative pb-12">
       <CustomCursor />
+      {showIntro && <FigmaIntro onDone={handleIntroDone} />}
 
       {/* ── Nav wrapper: always fixed, no relative/fixed switching layout jumps ── */}
       <div
-        className={`z-45 fixed top-0 left-0 right-0 w-full transition-all duration-300 ease-in-out border-b ${
-          scrolled
-            ? "bg-background/95 backdrop-blur-sm border-border/15"
-            : "bg-background border-border/10"
-        }`}
+        data-figma-node="navbar"
+        className={`z-45 fixed top-0 left-0 right-0 w-full transition-all duration-300 ease-in-out border-b ${scrolled
+          ? "bg-background/95 backdrop-blur-sm border-border/15"
+          : "bg-background border-border/10"
+          }`}
       >
         {/* ── Primary bar ── */}
         <div
-          className={`mx-auto max-w-2xl px-6 py-5 flex items-center justify-between select-none font-mono text-xs md:text-[13px] transition-all duration-300 relative ${
-            scrolled ? "py-5" : "py-5"
-          }`}
+          className={`mx-auto max-w-2xl px-6 py-5 flex items-center justify-between select-none font-mono text-xs md:text-[13px] transition-all duration-300 relative ${scrolled ? "py-5" : "py-5"
+            }`}
         >
 
           {/* LEFT: vicky (scrolled) ↔ nav links (at top) */}
@@ -82,11 +113,10 @@ export default function App() {
 
             {/* Nav links — fade + slide up out on scroll */}
             <div
-              className={`flex items-center gap-4 transition-all duration-300 ease-in-out ${
-                scrolled
-                  ? "opacity-0 -translate-y-3 pointer-events-none absolute"
-                  : "opacity-100 translate-y-0"
-              }`}
+              className={`flex items-center gap-4 transition-all duration-300 ease-in-out ${scrolled
+                ? "opacity-0 -translate-y-3 pointer-events-none absolute"
+                : "opacity-100 translate-y-0"
+                }`}
             >
               <NavLink to="/" className={({ isActive }) => `hover:text-primary transition-colors ${isActive ? "text-primary font-bold" : "text-muted-foreground"}`}>home</NavLink>
               <span className="text-border/30">/</span>
@@ -97,44 +127,43 @@ export default function App() {
 
             {/* vicky ~ — same style as hero h1, fades + slides up into navbar */}
             <span
-              className={`font-bold italic font-mono text-lg tracking-tight text-foreground transition-all duration-300 ease-in-out whitespace-nowrap ${
-                scrolled
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-3 absolute pointer-events-none"
-              }`}
+              className={`font-bold italic font-mono text-lg tracking-tight text-foreground transition-all duration-300 ease-in-out whitespace-nowrap ${scrolled
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-3 absolute pointer-events-none"
+                }`}
             >
               vicky <span className="inline-block animate-tilde-wave origin-center">~</span>
             </span>
           </div>
 
           {/* RIGHT: theme toggle (always) + menu toggle (scrolled) */}
-         <div className="flex items-center gap-2 transition-all">
+          <div className="flex items-center gap-2 transition-all">
 
 
-  <button
-    onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-    aria-label="toggle theme"
-    className="p-1.5 rounded-sm bg-card/40 text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
-  >
-    {theme === "dark" ? (
-      <Sun className="h-3.5 w-3.5" />
-    ) : (
-      <Moon className="h-3.5 w-3.5" />
-    )}
-  </button>  {scrolled && (
-    <button
-      onClick={() => setMenuOpen((o) => !o)}
-      aria-label="toggle menu"
-      className="p-1.5 rounded-sm  text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
-    >
-      {menuOpen ? (
-        <X className="h-3.5 w-3.5" />
-      ) : (
-        <Menu className="h-3.5 w-3.5" />
-      )}
-    </button>
-  )}
-</div>
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="toggle theme"
+              className="p-1.5 rounded-sm bg-card/40 text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-3.5 w-3.5" />
+              ) : (
+                <Moon className="h-3.5 w-3.5" />
+              )}
+            </button>  {scrolled && (
+              <button
+                onClick={() => setMenuOpen((o) => !o)}
+                aria-label="toggle menu"
+                className="p-1.5 rounded-sm  text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-all duration-300 cursor-pointer"
+              >
+                {menuOpen ? (
+                  <X className="h-3.5 w-3.5" />
+                ) : (
+                  <Menu className="h-3.5 w-3.5" />
+                )}
+              </button>
+            )}
+          </div>
 
           {/* ── Floating Popover Menu — only when scrolled and open ── */}
           {scrolled && menuOpen && (
@@ -143,9 +172,8 @@ export default function App() {
                 <NavLink
                   to="/"
                   onClick={() => setMenuOpen(false)}
-                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${
-                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                    }`}
                 >
                   home
                 </NavLink>
@@ -153,9 +181,8 @@ export default function App() {
                 <NavLink
                   to="/projects"
                   onClick={() => setMenuOpen(false)}
-                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${
-                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                    }`}
                 >
                   projects
                 </NavLink>
@@ -163,9 +190,8 @@ export default function App() {
                 <NavLink
                   to="/blog"
                   onClick={() => setMenuOpen(false)}
-                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${
-                    isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={({ isActive }) => `px-2 py-1.5 rounded-xs transition-colors hover:bg-secondary/40  ${isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                    }`}
                 >
                   blog
                 </NavLink>
@@ -201,7 +227,7 @@ export default function App() {
         <footer className="mt-20 pt-8 border-t border-border/10 font-mono text-xs text-slate-500 lowercase select-none flex flex-col items-center gap-2.5">
           <div className="flex items-center justify-center gap-2">
             <span>"talk is cheap. show me the code."</span>
-            
+
           </div>
           <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
             <a href={socialprofils.github} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">github</a>
@@ -212,6 +238,14 @@ export default function App() {
             <span className="text-border/20">/</span>
             <a href={socialprofils.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">instagram</a>
           </div>
+          {location.pathname === "/" && (
+            <button
+              onClick={replayIntro}
+              className="mt-1 text-[10px] text-muted-foreground/70 hover:text-primary hover:underline transition-all cursor-pointer font-mono select-none"
+            >
+              [replay designer intro]
+            </button>
+          )}
           {isMascotDismissed && (
             <button
               onClick={() => setMascotDismissed(false)}
@@ -224,14 +258,19 @@ export default function App() {
 
 
 
-{/* Floating Vickify Native AI Chatbox / Steve Mascot Trigger */}
-<MascotAssistant />
+        {/* Floating Vickify Native AI Chatbox / Steve Mascot Trigger */}
+        {!showIntro && (
+          <MascotAssistant
+            initialPosition={mascotDropPos}
+            onReplayIntro={replayIntro}
+          />
+        )}
 
-{isChatOpen && (
-  <div className="fixed inset-0 z-50 w-screen h-dvh bg-background flex flex-col font-sans text-xs animate-in fade-in duration-200">
-    <AssistantTerminal variant="palette" onClose={() => setChatOpen(false)} />
-  </div>
-)}
+        {isChatOpen && (
+          <div className="fixed inset-0 z-50 w-screen h-dvh bg-background flex flex-col font-sans text-xs animate-in fade-in duration-200">
+            <AssistantTerminal variant="palette" onClose={() => setChatOpen(false)} />
+          </div>
+        )}
 
       </div>
     </div>

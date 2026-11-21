@@ -84,12 +84,12 @@ export default function CustomCursor() {
           transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)"
         }}
       >
-        {/* Inner Animating Ring (Decoupled to rotate without affecting translation) */}
+        {/* Inner Animating Ring (Quiet Linear-minimal solid ring) */}
         <div
-          className={`rounded-full border border-primary/75 mix-blend-difference transition-all duration-300 ease-in-out ${
-            isHovered 
-              ? "w-[36px] h-[36px] border-dashed border-primary/90 animate-[spin_8s_linear_infinite]" 
-              : "w-[20px] h-[20px] border-solid"
+          className={`rounded-full border transition-all duration-200 ease-out ${
+            isHovered
+              ? "w-[30px] h-[30px] border-foreground/45 bg-foreground/[0.05]"
+              : "w-[18px] h-[18px] border-foreground/25 bg-transparent"
           }`}
         />
       </div>
@@ -105,12 +105,12 @@ export default function CustomCursor() {
           transform: "translate3d(-100px, -100px, 0) translate(-50%, -50%)"
         }}
       >
-        {/* Inner Animating Dot (Pulsates slightly when locked-on/hovered) */}
+        {/* Crisp center dot */}
         <div
-          className={`rounded-full bg-primary mix-blend-difference transition-all duration-300 ease-in-out ${
-            isHovered 
-              ? "w-[8px] h-[8px] animate-pulse" 
-              : "w-[4px] h-[4px]"
+          className={`rounded-full bg-foreground transition-all duration-200 ease-out ${
+            isHovered
+              ? "w-[5px] h-[5px] opacity-90"
+              : "w-[3.5px] h-[3.5px] opacity-75"
           }`}
         />
       </div>

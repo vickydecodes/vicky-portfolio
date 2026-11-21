@@ -27,6 +27,7 @@ const dataabout = {
 };
 
 const worktimeline = [
+  { jobtitle: "Forward Deployed Engineer (FDE)", where: "RR Donnelley", date: "Present" },
   { jobtitle: "Full Stack Developer", where: "Freelance", date: "2025 – Present" },
   {
     jobtitle: "Web Developer",
@@ -36,7 +37,7 @@ const worktimeline = [
   {
     jobtitle: "Full Stack Developer",
     where: "Freelance",
-    date: "2023 – Present",
+    date: "2023 – 2025",
   },
 ];
 
@@ -73,131 +74,6 @@ const beyondProfession = [
     title: "Reading",
     description:
       "Actively building a reading habit. Books force you to slow down in a way that screens don't — and that slowness, I've found, sharpens everything else.",
-  },
-];
-
-const blogs = [
-  {
-    title: "The Unexpected Idea Behind My New CLI Tool",
-    date: "November 14, 2025",
-    slug: "the-unexpected-idea-behind-my-cli",
-    description:
-      "I accidentally built something genuinely useful. No OpenAPI, no Swagger, no code generation — just a manifest file, one sync step, and a question I couldn't shake: why doesn't everyone do it this way?",
-    fullContent: `
-Some ideas come from planning. Others just show up.
-
-This one showed up.
-
-While working on a personal project, I stumbled onto a way to keep backend routes in sync with the frontend — no OpenAPI, no Swagger, no GraphQL, no code generators.
-
-The approach was simple:
-Export all backend routes into a small manifest file.
-Pipe that manifest directly into the frontend.
-
-Suddenly, the frontend automatically knew:
-
-- every available endpoint
-- how to generate request functions automatically
-- how to stay type-consistent as the backend changed
-- how to update itself without touching client-side code
-
-One sync step. That's the whole thing.
-
-The more I tested it, the stranger it felt — *why is everyone reaching for the heavy stuff when this works?*
-
-Everything I found online went straight to the full-weight solutions:
-
-- OpenAPI
-- Swagger
-- tRPC
-- GraphQL
-- RPC frameworks
-
-This was none of that. It was minimal, clean, and surprisingly effective.
-
-That discovery became the foundation for my CLI tool — a lightweight bridge between backend and frontend that stays out of your way.
-
-Sometimes the best ideas come from solving your own problem properly.
-
-More soon.
-    `,
-  },
-  {
-    title: "Fail Fast, Learn Faster",
-    date: "May 15, 2025",
-    slug: "fail-fast-learn-faster",
-    description:
-      "Breaking things is fine. Not learning from them isn't. Here's how I stopped treating failure as a verdict and started reading it like a bug report.",
-    fullContent: `
-"Fail fast" gets overused. But it's overused because it's right.
-
-Early on in my projects, things broke. Features missed. Decisions didn't hold up.
-
-The shift that helped most was treating failure as feedback — not as a verdict on effort or ability.
-
-Every bad call exposed something: a wrong assumption, a misread user need, a gap in thinking I didn't know was there.
-
-Failure isn't the opposite of progress. It's often what progress looks like from the inside.
-
-Fail fast, yes — but the real advantage is learning faster than you fail.
-    `,
-  },
-  {
-    title: "Balancing Vision and Execution",
-    date: "May 10, 2025",
-    slug: "balancing-vision-and-execution",
-    description:
-      "Big vision with no execution is just a nice Notion doc. Pure execution with no vision is a hamster wheel. Here's how I try to stay honest about which one I'm doing.",
-    fullContent: `
-Vision and execution pull against each other if you let them.
-
-Vision without execution stays a concept — polished, inspiring, going nowhere.
-Execution without vision burns real time on the wrong things.
-
-My direction is clear: build technology that genuinely moves the needle for the businesses using it.
-
-But that only matters if we execute — small, deliberate, consistent steps. Every day.
-
-Don't just picture the future. Show up and build it.
-    `,
-  },
-  {
-    title: "Why Smart Work Beats Hard Work",
-    date: "May 5, 2025",
-    slug: "why-smart-work-beats-hard-work",
-    description:
-      "I used to think grinding 20-hour days meant I was serious. Turns out I was just busy. Here's the shift that actually changed my output.",
-    fullContent: `
-Grinding 20 hours a day isn't discipline. It's usually a sign something's broken upstream.
-
-Smart work is about leverage — systems, focus, automation, knowing what not to do.
-It's making four concentrated hours outperform twenty scattered ones.
-
-I stopped mistaking busyness for productivity.
-
-The principle I return to: think before you do it twice.
-
-Effort still matters. But directed effort is what compounds over time.
-    `,
-  },
-  {
-    title: "The Power of Saying No",
-    date: "May 1, 2025",
-    slug: "the-power-of-saying-no",
-    description:
-      "Turns out 'no' is a complete sentence. It took me longer than I'd like to admit to figure that out — but once I did, everything got sharper.",
-    fullContent: `
-No is one of the most underrated words in building products.
-
-Every yes to the wrong project, the misaligned client, the low-leverage task is a quiet no to the thing that actually matters.
-
-Saying no isn't arrogance. It's prioritisation with some self-awareness attached.
-
-It protects time. It protects energy. It keeps direction intact.
-
-Clarity is a competitive advantage.
-And clarity almost always starts with what you're willing to refuse.
-    `,
   },
 ];
 
@@ -357,5 +233,4 @@ export {
   logotext,
   education,
   beyondProfession,
-  blogs,
 };

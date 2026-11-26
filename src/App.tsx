@@ -100,6 +100,16 @@ export default function App() {
   // Zustand global chat state
   const { isChatOpen, setChatOpen, isMascotDismissed, setMascotDismissed } = useChatStore()
 
+  // Lock background page scroll while full-screen chat palette is open
+  useEffect(() => {
+    if (!isChatOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [isChatOpen])
+
   const toggleThemeWithRipple = (sourceEl?: HTMLElement | null) => {
     const nextTheme = theme === "dark" ? "light" : "dark"
     playThemeRipple(nextTheme === "dark")
@@ -401,19 +411,16 @@ export default function App() {
             </button>
           )}
         </footer>
-
-
-
-        {/* Floating Vickify Native AI Chatbox / Steve Mascot Trigger */}
-        {!showIntro && <MascotAssistant onReplayIntro={replayIntro} />}
-
-        {isChatOpen && (
-          <div className="fixed inset-0 z-50 w-screen h-dvh bg-background flex flex-col font-sans text-xs animate-in fade-in duration-200">
-            <AssistantTerminal variant="palette" onClose={() => setChatOpen(false)} />
-          </div>
-        )}
-
       </div>
+
+      {/* Floating Vickify Native AI Chatbox / Steve Mascot Trigger */}
+      {!showIntro && !isChatOpen && <MascotAssistant onReplayIntro={replayIntro} />}
+
+      {isChatOpen && (
+        <div className="fixed inset-0 z-[60] w-screen h-dvh bg-background flex flex-col font-sans text-xs animate-in fade-in duration-200">
+          <AssistantTerminal variant="palette" onClose={() => setChatOpen(false)} />
+        </div>
+      )}
     </div>
   )
 }

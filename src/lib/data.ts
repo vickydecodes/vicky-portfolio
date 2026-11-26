@@ -27,7 +27,7 @@ const dataabout = {
 };
 
 const worktimeline = [
-  { jobtitle: "Forward Deployed Engineer (FDE)", where: "RR Donnelley", date: "Present" },
+  { jobtitle: "AI Engineer", where: "RR Donnelley (RRD)", date: "Present" },
   { jobtitle: "Full Stack Developer", where: "Freelance", date: "2025 – Present" },
   {
     jobtitle: "Web Developer",

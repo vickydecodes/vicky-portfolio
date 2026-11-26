@@ -46,6 +46,7 @@ export default function MascotAssistant({ initialPosition, onReplayIntro }: Masc
   const dragStartPos = useRef({ x: 0, y: 0 })
   const hasDragged = useRef(false)
   const lastTapRef = useRef(0)
+  const lastTouchEndRef = useRef(0)
   const singleTapTimerRef = useRef<number | null>(null)
   const onReplayRef = useRef(onReplayIntro)
   onReplayRef.current = onReplayIntro
@@ -327,19 +328,25 @@ export default function MascotAssistant({ initialPosition, onReplayIntro }: Masc
     }
 
     const handleMouseUp = () => {
+      if (Date.now() - lastTouchEndRef.current < 450) return
+      handleEndDrag()
+    }
+
+    const handleTouchEnd = () => {
+      lastTouchEndRef.current = Date.now()
       handleEndDrag()
     }
 
     window.addEventListener("mousemove", handleMouseMove)
     window.addEventListener("mouseup", handleMouseUp)
     window.addEventListener("touchmove", handleTouchMove, { passive: false })
-    window.addEventListener("touchend", handleMouseUp)
+    window.addEventListener("touchend", handleTouchEnd)
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
       window.removeEventListener("mouseup", handleMouseUp)
       window.removeEventListener("touchmove", handleTouchMove)
-      window.removeEventListener("touchend", handleMouseUp)
+      window.removeEventListener("touchend", handleTouchEnd)
     }
   }, [isDragging, isHoveringDustbin])
 
@@ -373,6 +380,7 @@ export default function MascotAssistant({ initialPosition, onReplayIntro }: Masc
         <div
           onMouseDown={(e) => {
             if (e.button !== 0) return // only left click
+            if (Date.now() - lastTouchEndRef.current < 450) return
             e.preventDefault()
             handleStartDrag(e.clientX, e.clientY)
           }}

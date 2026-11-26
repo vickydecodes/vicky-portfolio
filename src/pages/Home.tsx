@@ -160,15 +160,25 @@ export default function Home() {
       {/* Intro Header Section (Grouped for Chennai hover highlight) */}
       <section data-figma-node="hero" className="group/header select-none">
         <div className="flex justify-between items-start gap-3">
-          <h1 className="font-sans italic font-medium text-[26px] sm:text-[28px] tracking-[-0.03em] leading-tight lowercase">
-            <span className="linear-sheen pr-1">vicky</span>{" "}
-            <span
-              data-hero-tilde
-              className="inline-block text-muted-foreground/75 not-italic"
-            >
-              ~
-            </span>
-          </h1>
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-lg border border-border/70 bg-foreground/[0.03] overflow-hidden shrink-0 transition-transform duration-300 group-hover/header:scale-[1.03]">
+              <img
+                src="/assets/avatar_mc.png"
+                alt="vicky"
+                className="h-full w-full object-cover select-none"
+                style={{ imageRendering: "pixelated" }}
+              />
+            </div>
+            <h1 className="font-sans italic font-medium text-[26px] sm:text-[28px] tracking-[-0.03em] leading-tight lowercase">
+              <span className="linear-sheen pr-1">vicky</span>{" "}
+              <span
+                data-hero-tilde
+                className="inline-block text-muted-foreground/75 not-italic"
+              >
+                ~
+              </span>
+            </h1>
+          </div>
 
           <div className="text-right font-sans text-xs select-none shrink-0 space-y-0.5 pt-0.5">
             <p className="text-muted-foreground/70 group-hover/header:text-foreground transition-colors duration-300">
@@ -225,7 +235,7 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
               </span>
-              fde @ rr donnelley
+              ai engineer @ rrd
             </span>
             <span className="text-border">·</span>
             <span>watching: one piece</span>
@@ -240,7 +250,7 @@ export default function Home() {
         </LightUp>
         <div className="space-y-3 text-[15px] md:text-[16px] leading-[1.75] font-sans lowercase">
           <ScrollText
-            text="forward deployed engineer (fde) at rr donnelley, building end-to-end applications from database architecture to interface code. working across client-side logic, rest api engines, and infrastructure deployments."
+            text="ai engineer at rr donnelley (rrd), building end-to-end ai systems and applications from database architecture to interface code. working across client-side logic, rest api engines, and infrastructure deployments."
           />
           <ScrollText
             text="pursued a bachelor of computer applications at gurunanak college. also probably thinking about one piece right now."
